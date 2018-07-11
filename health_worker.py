@@ -21,15 +21,25 @@ def callback(ch, method, properties, body):
     # camera_exist checking
 
     res = check_exist(**cam)
-    if len(res) == 0:
-        p = True
-    else:
-        p = False
+    # TODO: we should write a scirpt to compare the new camera
+    # with existing camera of same retrieval (if there is any)
+    # and see if we need to update the existing one
+    cat = 'new'
+    # if we need to update the existing camera according to the new one
+    # we should set 'cat' to 'old' and 'cam' to the modified camera (with cameraID)
+
+    
+    # camera health checkng by retrieving images
+
 
     # after the checking, send processed result to another queue
     result = {
-        'pass': p,
-        'data': cam
+        'health': {
+            'exist': res,
+            'active': False,
+        },
+        'cam': cam,
+        'cat': cat
     }
     result_connection = pika.BlockingConnection(pika.ConnectionParameters(
         host='localhost'))
