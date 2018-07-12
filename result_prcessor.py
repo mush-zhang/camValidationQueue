@@ -37,7 +37,7 @@ def callback(ch, method, properties, body):
     #    Operation can be 'create', 'update', or 'ignore'.
 
     if result['cat'] == 'new':
-        if (result['health']['exist'] == []]) and (result['health']['active'] is True):
+        if (result['health']['exist'] == []) and (result['health']['active'] is True):
             result['op'] = 'add'
         else:
             result['op'] = 'ignore'
