@@ -1,0 +1,24 @@
+#!/bin/sh
+
+: '
+This script should be run once a week at fixed time.
+It gets all cameras in the database,
+and push them to message queue, for validating if it is working fine.
+
+for setting up the cron job when the queue is hosted on a machine,
+go to the directory /etc/cron.weekly/ and add it to the dir.
+
+This file should have no extension in its file name.
+it should be in shell script format.
+It should be granted 755 permission.
+'
+: '
+run python script to get cameras
+python + file path to run the get_cam.py should be placed here.
+redirect stdout and stderr to a file.
+we can check this file for fail re-run
+'
+
+python /path/to/get_cam.py > /path/to/record/error 2>&1
+
+exit 0

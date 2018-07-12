@@ -1,0 +1,20 @@
+#!/bin/sh
+
+: '
+This script is for get_cam_cron fail return
+
+for setting up the cron job when the queue is hosted on a machine,
+go to the directory /etc/cron.hourly/ and add it to the dir.
+
+This file should have no extension in its file name.
+it should be in shell script format.
+It should be granted 755 permission.
+'
+
+logFile=/path/to/record/error
+
+if grep -q 'InternalError' "$logFile"; then
+    python /path/to/get_cam.py > $logFile 2>&1
+fi
+
+exit 0
