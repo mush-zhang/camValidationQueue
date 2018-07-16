@@ -9,17 +9,12 @@ after result from health_worker is processed.
 
 def write_log(cam, op, health, cat, api_res):
 
-    if op == 'add':
+    if op == 'write':
 
-        if api_res.hasKey('cameraID'):
+        if api_res.hasKey('cameraID') is True and cam.hasKey('cameraID') is False:
             print 'successfully add camera ' + api_res['cameraID']
-        else:
-            print 'error ' + api_res
-
-    elif op == 'update':
-        
-        if api_res.hasKey('cameraID'):
-            print 'successfully updated camera ' + api_res['cameraID']
+        elif api_res.hasKey('cameraID') is True and cam.hasKey('cameraID') is True:
+            print 'successfully update camera ' + api_res['cameraID']
         else:
             print 'error ' + api_res
 
@@ -29,11 +24,6 @@ def write_log(cam, op, health, cat, api_res):
             # when this new camera should not be added to the db
             print 'ignore ' + cam + ' because ' + str(health)
 
-        elif cat == 'old':
-            # when an old camera is working correctly
-            print 'camera ' + cam['cameraID'] + ' works fine.'
-        else:
-            print 'error'
     else:
-        print 'error'
+        print 'Error: Multiple cameras in db with same retrieval method.'
 
