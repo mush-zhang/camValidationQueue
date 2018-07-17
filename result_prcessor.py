@@ -34,36 +34,12 @@ def callback(ch, method, properties, body):
     # decide on operations to take
     # op: str
     #    Operation to take. 
-    #    Operation can be 'create', 'update', or 'ignore'.
+    #    Operation can be 'write', or 'ignore'.
 
-    if result['cat'] == 'new':
-        if (result['health']['exist'] == []) and (result['health']['active'] is True):
-            result['op'] = 'add'
-        else:
-            result['op'] = 'ignore'
-
-    elif result['cat'] == 'old':
-        if result['health']['active'] is True:
-            result['op'] = 'ignore'
-        else:
-            result['op'] = 'update'
-            # we should also modify the camera object here
-            # set its 'is_active_*' fields to False
-    else:
-        print 'error'
-
-    result['api_res'] = None
-    if result['op'] == 'add':
-        # this is where we add the camera to db with python client
-        # api response should be added recorded here.
-
-        print 'add with API'
-
-    elif result['op'] == 'update':
-        # this is where we update the camera to db with python client
-        # api response should be added recorded here.
-        
-        print 'update'
+    if result['op'] == 'write':
+        # call api method here to create/update camera
+        result['api_res'] = client.write_camera(**result['cam'])
+    # other results are processed in write log   
     
     write_log(**result)
     print(" [x] Done")

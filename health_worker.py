@@ -17,29 +17,51 @@ def callback(ch, method, properties, body):
     cam = literal_eval(body)
 
     # should go through checking here
-
+    
+    # initialize 'exist' and 'active' to false
+    exist = 'unchecked'
+    active = 'unchecked'
     # camera_exist checking
 
+    # this fucntion should check if a new camera exist in db.
+    # the returned value is None if already exist
+    # returning a camera without camera id means that we add new camera
+    # returning a camera with camera id means that we update old camera
     res = check_exist(**cam)
-    # TODO: we should write a scirpt to compare the new camera
-    # with existing camera of same retrieval (if there is any)
-    # and see if we need to update the existing one
-    cat = 'new'
-    # if we need to update the existing camera according to the new one
-    # we should set 'cat' to 'old' and 'cam' to the modified camera (with cameraID)
 
-    
-    # camera health checkng by retrieving images
+    # if returning an old camera
+    if len(res) > 1 :
+        op = 'error'
+        cam = None
+        exist = True
+    elif len(res) == 1 and res[0].hasKey('camera_ID') is True:
+        op = 'write' # combine add and update to one fucntion
+        cam = res[0]
+        exist = True
+    elif len(res) == 1 and res[0].hasKey('camera_ID') is False:
+        # new camera that does not exist on db
+        # camera health checkng by retrieving images
+        exist = False
+        active = False
+
+        if active is True:
+            op = 'write'
+        else:
+            op = 'ignore'
+    else:
+        exist = False
+        op = 'ignore'
 
 
     # after the checking, send processed result to another queue
     result = {
         'health': {
-            'exist': res,
-            'active': False,
+            'exist': exist,
+            'active': active,
         },
         'cam': cam,
-        'cat': cat
+        'op': op,
+        'cat': 'new'
     }
     result_connection = pika.BlockingConnection(pika.ConnectionParameters(
         host='localhost'))
