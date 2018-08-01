@@ -23,7 +23,7 @@ def compare_cam(newCam, oldCam):
     """
     updated = False
     for key, value in enumerate(oldCam):
-        if key != 'retrieval' and value == 'null':
+        if key != 'retrieval' and value == 'null' and newCam[key]:
             oldCam[key] = newCam[key]
             updated = True
     if updated:
