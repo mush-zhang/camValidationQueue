@@ -27,7 +27,7 @@ def callback(ch, method, properties, body):
     # initialize duration for checking to run (if checking ran too long, it raises error)
     duration = 10
     cam = check_active(cam, duration)
-    active = cam['is_active_image']
+    active = cam['is_active_image'] or cam['is_active_video']
 
     # camera_exist checking
 
