@@ -21,24 +21,27 @@ def callback(ch, method, properties, body):
 
     result = literal_eval(body)
 
-    with open('health_log', 'a') as log_file:
+    log_file = open('health_log', 'a')
 
-        if result.hasKey('error'):
-            log_file.write(result['error'])
-        elif result['op'] == 'write':
-            if result['cam'].hasKey('cameraID') is False:
-                log_file.write('successfully add camera ' + result['api_res'])
-            else:
-                log_file.write('successfully update camera ' + result['api_res'])
-
-        elif result['op'] == 'ignore':
-
-            if result['cat'] == 'new':
-                # when this new camera should not be added to the db
-                log_file.write( 'ignore ' + result['cam'] + ' because ' + str(result['cam']['health'])
-
+    if result.get('error') != None:
+        log_file.write(result['error'])
+    elif result['op'] == 'write':
+        if result['cam'].get('cameraID') is None:
+            log_file.write('successfully add camera ' + result['api_res'])
         else:
-            log_file.write( 'Error: Multiple cameras in db with same retrieval method.')
+            log_file.write('successfully update camera ' + result['api_res'])
+
+    elif result['op'] == 'ignore':
+        print 'ignore'
+        if result['cat'] == 'new':
+            # when this new camera should not be added to the db
+            log_file.write('ignore ' + result['cam'] + ' because ' + str(result['cam']['health']))
+
+    else:
+        log_file.write('Error: Multiple cameras in db with same retrieval method.')
+    log_file.close()
+    print 'Done'
+    ch.basic_ack(delivery_tag = method.delivery_tag)
 
 channel.basic_qos(prefetch_count=1)
 channel.basic_consume(callback, queue='log')

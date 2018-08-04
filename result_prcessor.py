@@ -2,7 +2,7 @@
 import pika
 import time
 from ast import literal_eval
-from write_log import write_log
+from CAM2CameraDatabaseAPIClient.client import Client
 
 """
 This file process the results passed from health worker after checking new cameras:

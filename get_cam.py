@@ -2,7 +2,7 @@
 to get all cameras from db and send them to queue for health checking.
 """
 import pika
-# also import the python client
+from CAM2CameraDatabaseAPIClient.client import Client
 
 connection = pika.BlockingConnection(pika.ConnectionParameters('localhost'))
 channel = connection.channel()
@@ -11,11 +11,15 @@ channel.queue_declare(queue='old', durable=True)
 
 # initialize your client here
 
-client = Client('clientID', 'clientSecret')
+client = Client('admin', 'admin')
 
 i = 0
-while True: 
-    camera_list = client.search_camera(offset=i)
+while True:
+    try:
+        camera_list = client.search_camera(offset=i)
+    except Exception as e:
+        print e
+        break
     if len(camera_list) == 0:
         break
     for camera in camera_list:
