@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 import pika
 import time
-from check_exist import check_exist
-from check_active import check_active
+from utils.check_exist import check_exist
+from utils.check_active import check_active
 from ast import literal_eval
 
 connection = pika.BlockingConnection(pika.ConnectionParameters(

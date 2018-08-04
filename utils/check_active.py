@@ -13,7 +13,7 @@ Example on how to run:
 
 """
 
-from getFramerate import *
+import getFramerate
 
 
 def check_active(cam, duration):
@@ -36,12 +36,20 @@ def check_active(cam, duration):
     if cam['type'] == 'ip':
         # we need to check both image and video path in the future
         url = cam['image_path']
+        cam['is_active_video'] = False
+
     elif cam['type'] == 'non_ip':
         url = cam['snapshot_url']
+        cam['is_active_video'] = False
+
     else:
         url = cam['m3u8_url']
-
-    framerate = setup(url=url, duration=duration)
+        cam['is_active_image'] = True
+    try:
+        framerate = getFramerate.setup(url=url, duration=duration)
+    except Exception as e:
+        print e
+        
     if framerate > 0:
         if cam['type'] == 'ip' or cam['type'] == 'non_ip':
             # we need to check both image and video path in the future

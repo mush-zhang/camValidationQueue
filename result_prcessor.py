@@ -24,7 +24,7 @@ connection = pika.BlockingConnection(pika.ConnectionParameters(
         host='localhost'))
 channel = connection.channel()
 
-channel.queue_declare(queue='v1-2', durable=True)
+channel.queue_declare(queue='result', durable=True)
 print(' [*] Waiting for messages. To exit press CTRL+C')
 
 def callback(ch, method, properties, body):
@@ -38,14 +38,27 @@ def callback(ch, method, properties, body):
 
     if result['op'] == 'write':
         # call api method here to create/update camera
-        result['api_res'] = client.write_camera(**result['cam'])
+
+        try:
+            result['api_res'] = client.write_camera(**result['cam'])
+        except Exception as e:
+            result['error'] = e
     # other results are processed in write log   
-    
-    write_log(**result)
+
+    result_connection = pika.BlockingConnection(pika.ConnectionParameters(
+        host='localhost'))
+    result_channel = result_connection.channel()
+    result_channel.queue_declare(queue='log', durable=True)
+    channel.basic_publish(exchange='',
+                        routing_key='log',
+                        body=str(result),
+                        properties=pika.BasicProperties(
+                            delivery_mode = 2, # make message persistent
+                        ))
     print(" [x] Done")
     ch.basic_ack(delivery_tag = method.delivery_tag)
 
 channel.basic_qos(prefetch_count=1)
-channel.basic_consume(callback, queue='v1-2')
+channel.basic_consume(callback, queue='result')
 
 channel.start_consuming()
