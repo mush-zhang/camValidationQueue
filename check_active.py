@@ -1,7 +1,22 @@
+"""
+******************************
+Authors: Jia En Chua,
+Last Updated on: 7/18/2018
+******************************
+Example on how to run:
+    cam = {
+        'type': 'ip',
+        'is_active_image': 'False',
+        'image_path': "http://207.251.86.238/cctv261.jpg"
+    }
+    cam = check_active(cam, duration)
+
+"""
+
 from getFramerate import *
 
 
-def check_active(cam):
+def check_active(cam, duration):
     """
     To check if a cam is active, we determine if the frame rate is more than 0.
     To get the frame rate, we need 3 files: getFramerate.py, camera.py, stream_parser.py (logic flows in this order)
@@ -26,7 +41,7 @@ def check_active(cam):
     else:
         url = cam['m3u8_url']
 
-    framerate = setup(url=url, duration=60)
+    framerate = setup(url=url, duration=duration)
     if framerate > 0:
         if cam['type'] == 'ip' or cam['type'] == 'non_ip':
             # we need to check both image and video path in the future
@@ -36,11 +51,3 @@ def check_active(cam):
 
     return cam
 
-
-if __name__ == "__main__":
-    cam = {
-        'type': 'non_ip',
-        'snapshot_url': "http://www.nestcamdirectory.com/view.php?cam=147"
-        # 'snapshot_url': "http://207.251.86.238/cctv290.jpg"
-    }
-    print(check_active(cam))

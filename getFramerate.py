@@ -1,6 +1,6 @@
 """
 Description:
-    This script determine the camera's frame rate by calling functions in camera.py
+    This script determine the camera's frame rate by calling functions in camera.py and stream_parser.py
 
 How to run:
     url = "http://207.251.86.238/cctv290.jpg"
@@ -42,8 +42,8 @@ def setup(url=None, duration=None):
 
     try:
         camera.get_ref_image()
-    except:
-        raise Exception("Can't get reference image")
+    except Exception as e:
+        raise e
 
     try:
         framerate = assessFramerate(camera, duration)
