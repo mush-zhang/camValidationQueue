@@ -2,6 +2,7 @@
 import pika
 import time
 from check_exist import check_exist
+from check_active import check_active
 from ast import literal_eval
 
 connection = pika.BlockingConnection(pika.ConnectionParameters(
@@ -21,6 +22,13 @@ def callback(ch, method, properties, body):
     # initialize 'exist' and 'active' to false
     exist = 'unchecked'
     active = 'unchecked'
+
+    # camera active checking
+    # initialize duration for checking to run (if checking ran too long, it raises error)
+    duration = 10
+    cam = check_active(cam, duration)
+    active = cam['is_active_image']
+
     # camera_exist checking
 
     # this fucntion should check if a new camera exist in db.
