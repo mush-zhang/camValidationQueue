@@ -1,3 +1,15 @@
+"""
+Description:
+    This script determine the camera's frame rate by calling functions in camera.py
+
+How to run:
+    url = "http://207.251.86.238/cctv290.jpg"
+    duration = 60
+    framerate = setup(url=url, duration=duration)
+
+"""
+
+
 from __future__ import print_function
 import os
 import camera as importCameras
@@ -41,6 +53,3 @@ def setup(url=None, duration=None):
     return framerate
 
 
-if __name__ == "__main__":
-    url = "http://207.251.86.238/cctv290.jpg"
-    framerate = setup(url=url, duration=60)
