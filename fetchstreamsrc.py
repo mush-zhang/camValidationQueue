@@ -14,7 +14,7 @@ To run:
     Example:
         getImages_from_stream("https://www.youtube.com/watch?v=qghQ5eKGcyE", "5", "2", "result")
         # Retrieve youtube live of train camera
-        
+
 ** WARNING ** This is currently a WIP script and IS NOT ROBUST.
 
 ******************************
@@ -23,7 +23,7 @@ To run:
 Authors: Caleb Tung,
 Created: 6/17/2017
 Updated by: Jia En Chua,
-Updated on: 7/18/2018
+Updated on: 8/6/2018
 
 """
 
