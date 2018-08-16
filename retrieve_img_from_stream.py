@@ -1,10 +1,20 @@
 """
-This module uses Streamlink to find a livestream src URL on a webpage.
+This module uses Streamlink to find a livestream src URL on a webpage and
+uses FFMPEG to convert the URL into sequence of images.
 
 *****************************
-Command Line Usage: python fetchstreamsrc.py [WEBPAGE]
-Arguments:
-    In the main function, user can set duration, framePerSecond, and output filename.
+To run:
+    User will need four arguments to call getImages_from_stream() method.
+    Arguments: str
+        1. page_url: As the name suggest, url of the live stream camera
+        2. duration: How long should the program retrieve images from the website
+        3. framePerSecond: Number of frames that should be generated per second
+        4. imageName: Name of the output images
+
+    Example:
+        getImages_from_stream("https://www.youtube.com/watch?v=qghQ5eKGcyE", "5", "2", "result")
+        # Retrieve youtube live of train camera
+
 ** WARNING ** This is currently a WIP script and IS NOT ROBUST.
 
 ******************************
@@ -13,7 +23,7 @@ Arguments:
 Authors: Caleb Tung,
 Created: 6/17/2017
 Updated by: Jia En Chua,
-Updated on: 7/18/2018
+Updated on: 8/6/2018
 
 """
 
@@ -80,23 +90,6 @@ def get_stream_src_from_url(page_url):
     return src_url
 
 
-def getImages_from_stream(page_url, duration, framesPerSec, outputfile):
+def getImages_from_stream(page_url, duration, framesPerSec, imageName):
     hls_url = get_stream_src_from_url(page_url)
-    call(["ffmpeg", "-i", hls_url, "-vf", "fps=" + framesPerSec, "-t", duration, "-y", "Outputs/" + outputfile + "%d.jpg"])
-
-
-
-if __name__ == '__main__':
-    EXPECTED_NUM_ARGS = 1 + 1
-
-    hls_url = None
-    fps = "2"
-    duration = "5"
-    outputfile = "result"
-    if len(sys.argv) < EXPECTED_NUM_ARGS:
-        print('Expected ' + str(+ EXPECTED_NUM_ARGS-1) + ' cmd line args.')
-    else:
-        hls_url = get_stream_src_from_url(sys.argv[1])
-
-    if hls_url:
-        getImages_from_stream(hls_url, duration, fps, outputfile)
+    call(["ffmpeg", "-i", hls_url, "-vf", "fps=" + framesPerSec, "-t", duration, "-y", "Outputs/" + imageName + "%d.jpg"])
