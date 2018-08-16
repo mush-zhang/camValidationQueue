@@ -90,7 +90,7 @@ class ImageStreamParser(StreamParser):
 
         # Handle the cameras that return empty content.
         if frame == '':
-            raise error.CorruptedFrameError
+            raise error.CorruptedFrameError("In stream_parser.py, the frame retrieved bu urllib2 is empty")
 
         # Get the size of the downloaded frame in bytes.
         frame_size = len(frame)

@@ -37,15 +37,13 @@ class Camera():
             raise error.UnreachableCameraError('get_ref_image_ERROR: Image could not be retrieved for Url: {}'.format(self.url))
 
         except Exception as e:
-            raise(e)
+            raise e
 
-        return
 
     def get_start_image(self):
         if self.startTime == 0 and self.refImage != None:
-            # Set the timestamp of the snapshot that will be downloaded.
             frame_timestamp = time.time()
-            self.startImage = None # Set file name to none to determine success
+            self.startImage = None
             try:
                 # Download the image.
                 frame, _ = self.parser.get_frame()
@@ -53,22 +51,20 @@ class Camera():
                 cv2.imwrite(self.startImage, frame)
 
                 if self.startImage == None or frame_timestamp == None:
-                    raise(Exception("get_start_image_ERROR: Image could not be retrieved."))
+                    raise Exception("get_start_image_ERROR: Image could not be retrieved.")
 
                 if filecmp.cmp(self.refImage, self.startImage) == False:
                     self.startTime = frame_timestamp
 
             except Exception as e:
-                # logging.exception(e)
-                raise(e)
+                raise e
 
 
     def get_end_image_and_framerate(self):
         framerate = 0
         if self.startTime != 0:
-            # Set the timestamp of the snapshot that will be downloaded.
             frame_timestamp = time.time()
-            self.endImage = None # Set file name to none to determine success
+            self.endImage = None
             try:
                 # Download the image.
                 frame, _ = self.parser.get_frame()
@@ -76,15 +72,14 @@ class Camera():
                 cv2.imwrite(self.endImage, frame)
 
                 if self.endImage == None or frame_timestamp == None:
-                    raise(Exception("EndERROR: Image could not be retrieved."))
+                    raise Exception("EndERROR: Image could not be retrieved.")
                     
                 if filecmp.cmp(self.startImage, self.endImage) == False:
                     self.endTime = frame_timestamp
                     framerate = "{:.2f}".format(self.endTime - self.startTime)
 
             except Exception as e:
-                # logging.exception(e)
-                raise(e)
+                raise e
 
         return framerate
 
